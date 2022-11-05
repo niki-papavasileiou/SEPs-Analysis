@@ -1,6 +1,6 @@
 # SEPs-Analysis
 
-This code : 
+This code analyzes 2 SPEs from the GOES11 and GOES13 txt files.
 
 - Plots the max FPDO
 - Plots the median FPDO
