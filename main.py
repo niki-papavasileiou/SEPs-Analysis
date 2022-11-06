@@ -53,7 +53,6 @@ def firstsep():
     plt.yscale('log')
     plt.show()
 
-#########################
 
     int1 = np.trapz(energy, goes['2011-05-02':'2011-06-29'].max())
     print(int1)
@@ -61,13 +60,10 @@ def firstsep():
     int2 = np.trapz(energy, goes['2011-05-02':'2011-06-29'].median())
     print(int2)
 
-
-#######
     print('Datetime of the max values:\n')
     l = goes['2011-05-02':'2011-06-29'].idxmax()
     print(l)
 
-########
 
     max= goes['2011-05-02':'2011-06-29'].max()
 
@@ -142,7 +138,6 @@ def secsep():
     goes['FPDO_5'].rolling(window =20).mean().plot()
     goes['FPDO_6'].rolling(window =20).mean().plot()
 
-#0.0001-0.08
 
     plt.figure(figsize=(8, 8))
     plt.plot(energy,goes['2006-11-30':'2006-12-21'].median(),'o-')
@@ -155,7 +150,6 @@ def secsep():
     plt.yscale('log')
     plt.show()
 
-#########################
 
     int1 = np.trapz(energy, goes['2006-11-30':'2006-12-21'].max())
     print(int1)
@@ -164,12 +158,10 @@ def secsep():
     print(int2)
 
 
-#######
     print('Datetime of the max values:\n')
     l = goes['2006-11-30':'2006-12-21'].idxmax()
     print(l)
 
-########
 
     max= goes['2006-11-30':'2006-12-21'].max()
 
