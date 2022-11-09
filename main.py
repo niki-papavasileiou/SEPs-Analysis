@@ -33,6 +33,10 @@ def firstsep():
     plt.yscale('log')
     plt.show()
 
+    slope_intercept = np.polyfit(energy,goes['2011-06-03':'2011-06-22'].max(),1)
+    print("\ndifferential proton flux spectrum (max):  ")
+    print(slope_intercept[0])
+
     goes['FPDO_1'].rolling(window =20).mean().plot()
     goes['FPDO_2'].rolling(window =20).mean().plot()
     goes['FPDO_3'].rolling(window =20).mean().plot()
@@ -53,14 +57,19 @@ def firstsep():
     plt.yscale('log')
     plt.show()
 
+    slope_intercept = np.polyfit(energy,goes['2011-06-03':'2011-06-22'].median(),1)
+    print("\ndifferential proton flux spectrum (median):  ")
+    print(slope_intercept[0])
 
     int1 = np.trapz(energy, goes['2011-05-02':'2011-06-29'].max())
+    print("\nFPDO max integral: ")
     print(int1)
 
     int2 = np.trapz(energy, goes['2011-05-02':'2011-06-29'].median())
+    print("\nFPDO median integral: ")
     print(int2)
 
-    print('Datetime of the max values:\n')
+    print('\nDatetime of the max values:')
     l = goes['2011-05-02':'2011-06-29'].idxmax()
     print(l)
 
@@ -68,7 +77,7 @@ def firstsep():
     max= goes['2011-05-02':'2011-06-29'].max()
 
     i =0 
-    print("S NOASS's scale for the max values\n ")
+    print("\nS NOASS's scale for the max values")
     for i in max:
 
         if ((i < 10^6) &( i >= 10^5)):
@@ -85,7 +94,7 @@ def firstsep():
     median = goes['2011-05-02':'2011-06-29'].median()
 
     j =0 
-    print("S NOASS's scale for the median values \n")
+    print("\nS NOASS's scale for the median values ")
     for j in median:
 
         if ((j < 10^6) &( j >= 10^5)):
@@ -131,6 +140,10 @@ def secsep():
     plt.yscale('log')
     plt.show()
 
+    slope_intercept = np.polyfit(energy,goes['2006-11-30':'2006-12-21'].max(),1)
+    print("\ndifferential proton flux spectrum (max):  ")
+    print(slope_intercept[0])
+
     goes['FPDO_1'].rolling(window =20).mean().plot()
     goes['FPDO_2'].rolling(window =20).mean().plot()
     goes['FPDO_3'].rolling(window =20).mean().plot()
@@ -150,15 +163,21 @@ def secsep():
     plt.yscale('log')
     plt.show()
 
+    slope_intercept = np.polyfit(energy,goes['2006-11-30':'2006-12-21'].median(),1)
+    print("\ndifferential proton flux spectrum (max):  ")
+    print(slope_intercept[0])
+
 
     int1 = np.trapz(energy, goes['2006-11-30':'2006-12-21'].max())
+    print("\nFPDO max integral: ")
     print(int1)
 
     int2 = np.trapz(energy, goes['2006-11-30':'2006-12-21'].median())
+    print("\nFPDO median integral: ")
     print(int2)
 
 
-    print('Datetime of the max values:\n')
+    print('\nDatetime of the max values:\n')
     l = goes['2006-11-30':'2006-12-21'].idxmax()
     print(l)
 
@@ -166,7 +185,7 @@ def secsep():
     max= goes['2006-11-30':'2006-12-21'].max()
 
     i =0 
-    print("S NOASS's scale for the max values\n ")
+    print("\nS NOASS's scale for the max values\n ")
     for i in max:
 
         if ((i < 10^6) &( i >= 10^5)):
@@ -183,7 +202,7 @@ def secsep():
     median = goes['2006-11-30':'2006-12-21'].median()
 
     j =0 
-    print("S NOASS's scale for the median values \n")
+    print("\nS NOASS's scale for the median values \n")
     for j in median:
 
         if ((j < 10^6) &( j >= 10^5)):
