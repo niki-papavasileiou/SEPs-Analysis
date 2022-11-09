@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-def firstsep():
+def sep():
 
     plt.figure(figsize=(8, 8))
     goes.plot()
@@ -112,7 +112,7 @@ if ask in ['1']:
 
     goes = goes['2011-06-03':'2011-06-22']
     
-    firstsep()
+    sep()
 elif ask in ['2']:
 
     fname='./SEP_H_GOES11.txt'
@@ -124,6 +124,6 @@ elif ask in ['2']:
 
     goes = goes['2006-11-30':'2006-12-21']
 
-    firstsep()
+    sep()
 else:
     print("error")
