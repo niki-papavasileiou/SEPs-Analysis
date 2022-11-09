@@ -1,4 +1,4 @@
-# SEPs-Analysis
+# SPEs-Analysis
 
 This code analyzes 2 SPEs from the GOES11 and GOES13 txt files.
 
