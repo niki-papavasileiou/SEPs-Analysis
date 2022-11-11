@@ -10,10 +10,10 @@ def sep():
     plt.yscale('log')
     plt.show()
 
-    energy = [10,20, 30,50, 70, 80]
+    energy = [10, 20, 30, 50, 70, 80]
 
     plt.figure(figsize=(8, 8))
-    plt.plot(energy,goes.max(),'o-')
+    plt.plot(np.log(energy),goes.max(),'o-')
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
     plt.grid()
@@ -23,7 +23,7 @@ def sep():
     plt.yscale('log')
     plt.show()
 
-    slope_intercept = np.polyfit(energy,goes.max(),1)
+    slope_intercept = np.polyfit(np.log(energy),goes.max(),1)
     print("\ndifferential proton flux spectrum (max):  ")
     print(slope_intercept[0])
 
@@ -37,7 +37,7 @@ def sep():
 #0.0001-0.08
 
     plt.figure(figsize=(8, 8))
-    plt.plot(energy,goes.median(),'o-')
+    plt.plot(np.log(energy),goes.median(),'o-')
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
     plt.grid()
@@ -47,7 +47,7 @@ def sep():
     plt.yscale('log')
     plt.show()
 
-    slope_intercept = np.polyfit(energy,goes.median(),1)
+    slope_intercept = np.polyfit(np.log(energy),goes.median(),1)
     print("\ndifferential proton flux spectrum (median):  ")
     print(slope_intercept[0])
 
@@ -55,9 +55,17 @@ def sep():
     print("\nFPDO max integral: ")
     print(int1)
 
+    int12 = np.trapz(np.log(energy), goes.max())
+    print("\nFPDO max integral (log): ")
+    print(int12)
+
     int2 = np.trapz(energy, goes.median())
     print("\nFPDO median integral: ")
     print(int2)
+
+    int22 = np.trapz(np.log(energy), goes.max())
+    print("\nFPDO median integral (log): ")
+    print(int22)
 
     print('\nDatetime of the max values:')
     l = goes.idxmax()
@@ -99,7 +107,7 @@ def sep():
             print ('S1')
 
 
-ask = input("Please choose a SEP\n1. 2011-06-03:2011-06-22\n2. 2006-11-30:2006-12-21\n")
+ask = input("Please choose a SEP\n1. 2011-06-03:2011-06-21\n2. 2006-12-06:2006-12-18\n")
 
 if ask in ['1']:
 
@@ -110,8 +118,7 @@ if ask in ['1']:
     goes['epoch']=pd.to_datetime(goes['epoch'])
     goes  = goes.set_index('epoch')   
 
-    goes = goes['2011-06-03':'2011-06-22']
-    
+    goes = goes['2011-06-03':'2011-06-21']
     sep()
 elif ask in ['2']:
 
@@ -122,7 +129,7 @@ elif ask in ['2']:
     goes['epoch']=pd.to_datetime(goes['epoch'])
     goes  = goes.set_index('epoch')   
 
-    goes = goes['2006-11-30':'2006-12-21']
+    goes = goes['2006-12-06':'2006-12-18']
 
     sep()
 else:
