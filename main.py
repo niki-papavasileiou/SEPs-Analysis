@@ -29,14 +29,7 @@ def sep():
     print("\ndifferential proton flux spectrum (max):  ")
     print(slope_intercept[0])
 
-    goes['FPDO_1'].rolling(window =20).mean().plot()
-    goes['FPDO_2'].rolling(window =20).mean().plot()
-    goes['FPDO_3'].rolling(window =20).mean().plot()
-    goes['FPDO_4'].rolling(window =20).mean().plot()
-    goes['FPDO_5'].rolling(window =20).mean().plot()
-    goes['FPDO_6'].rolling(window =20).mean().plot()
 
-#0.0001-0.08
 
     plt.figure(figsize=(8, 8))
     plt.plot(np.log(energy),goes.mean(),'o-')
@@ -58,11 +51,12 @@ def sep():
     print(int1)
 
     int12 = interpolate.interp1d(np.log(energy),goes.max(), kind='cubic')
-    xnew = np.log(energy)
-    ynew = int12(xnew)
-    plt.plot(xnew,ynew)
+    xnew1 = np.log(energy)
+    ynew1 = int12(xnew1)
+    plt.plot(xnew1,ynew1)
     plt.show()
-    int122= np.trapz(xnew,ynew)
+
+    int122= np.trapz(xnew1,ynew1)
     print("\nFPDO max integral (interpolation): ")
     print(int122)
 
@@ -72,7 +66,7 @@ def sep():
 
     int22 = interpolate.interp1d(np.log(energy),goes.mean(), kind='cubic')
     xnew = np.log(energy)
-    ynew = int12(xnew)
+    ynew = int22(xnew)
     plt.plot(xnew,ynew)
     plt.show()
     int222= np.trapz(xnew,ynew)
@@ -84,40 +78,45 @@ def sep():
     print(l)
 
     max= goes.max()
-
-    i =0 
+    ar = np.array(max ** 10)
+    
+    out =[]
     print("\nS NOASS's scale for the max values")
-    for i in max:
+    for i in ar:
 
-        if ((i < 10^6) &( i >= 10^5)):
-            print ('S5')
-        elif ((i < 10^5) &( i>= 10^4)):
-            print ('S4')
-        elif ((i < 10^4) &( i>= 10^3)):
-            print ('S3')
+        if ( i >= 10^5):
+            out.append ("S5")
+        elif (( i>= 10^4) &(i < 10^5) ):
+            out.append ("S4")
+        elif (( i>= 10^3) & (i < 10^4) ):
+            out.append ("S3")
         elif ((i < 10^3) &( i>= 10^2)):
-            print ('S2')
-        elif i <= 10:
-            print ('S1')
+            out.append ("S2")
+        elif (i <= 10):
+            out.append ("S1")
+        
+    print(out)
 
-    median = goes.mean()
+    mean= goes.mean()
+    arr = np.array(mean ** 10)
+    
+    out2 =[]
+    print("\nS NOASS's scale for the mean values")
+    for i in arr:
 
-    j =0 
-    print("\nS NOASS's scale for the mean values ")
-    for j in median:
-
-        if ((j < 10^6) &( j >= 10^5)):
-            print ('S5')
-        elif ((j < 10^5) &( j>= 10^4)):
-            print ('S4')
-        elif ((j < 10^4) &( j>= 10^3)):
-            print ('S3')
-        elif ((j < 10^3) &( j>= 10^2)):
-            print ('S2')
-        elif j <= 10:
-            print ('S1')
-
-
+        if ( i >= 10^5):
+            out2.append ("S5")
+        elif (( i>= 10^4) &(i < 10^5) ):
+            out2.append ("S4")
+        elif (( i>= 10^3) & (i < 10^4) ):
+            out2.append ("S3")
+        elif ((i < 10^3) &( i>= 10^2)):
+            out2.append ("S2")
+        elif (i <= 10):
+            out2.append ("S1")
+        
+    print(out2)
+    
 ask = input("Please choose a SEP\n1. 2011-06-03:2011-06-21\n2. 2006-12-06:2006-12-18\n")
 
 if ask in ['1']:
