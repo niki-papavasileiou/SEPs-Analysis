@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy import interpolate 
+from scipy.integrate import quad
 
 def sep():
 
@@ -37,40 +39,49 @@ def sep():
 #0.0001-0.08
 
     plt.figure(figsize=(8, 8))
-    plt.plot(np.log(energy),goes.median(),'o-')
+    plt.plot(np.log(energy),goes.mean(),'o-')
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
     plt.grid()
     plt.ylabel('FPDO')
     plt.xlabel('Energy')
-    plt.title('SPE differential proton flux spectrum (med)')
+    plt.title('SPE differential proton flux spectrum (mean)')
     plt.yscale('log')
     plt.show()
 
-    slope_intercept = np.polyfit(np.log(energy),goes.median(),1)
-    print("\ndifferential proton flux spectrum (median):  ")
+    slope_intercept = np.polyfit(np.log(energy),goes.mean(),1)
+    print("\ndifferential proton flux spectrum (mean):  ")
     print(slope_intercept[0])
 
-    int1 = np.trapz(energy, goes.max())
-    print("\nFPDO max integral: ")
+    int1 = np.trapz(np.log(energy), goes.max())
+    print("\nFPDO max integral : ")
     print(int1)
 
-    int12 = np.trapz(np.log(energy), goes.max())
-    print("\nFPDO max integral (log): ")
-    print(int12)
+    int12 = interpolate.interp1d(np.log(energy),goes.max(), kind='cubic')
+    xnew = np.log(energy)
+    ynew = int12(xnew)
+    plt.plot(xnew,ynew)
+    plt.show()
+    int122= np.trapz(xnew,ynew)
+    print("\nFPDO max integral (interpolation): ")
+    print(int122)
 
-    int2 = np.trapz(energy, goes.median())
-    print("\nFPDO median integral: ")
+    int2 = np.trapz(np.log(energy), goes.mean())
+    print("\nFPDO mean integral : ")
     print(int2)
 
-    int22 = np.trapz(np.log(energy), goes.max())
-    print("\nFPDO median integral (log): ")
-    print(int22)
+    int22 = interpolate.interp1d(np.log(energy),goes.mean(), kind='cubic')
+    xnew = np.log(energy)
+    ynew = int12(xnew)
+    plt.plot(xnew,ynew)
+    plt.show()
+    int222= np.trapz(xnew,ynew)
+    print("\nFPDO mean integral (interpolation): ")
+    print(int222)
 
     print('\nDatetime of the max values:')
     l = goes.idxmax()
     print(l)
-
 
     max= goes.max()
 
@@ -89,10 +100,10 @@ def sep():
         elif i <= 10:
             print ('S1')
 
-    median = goes.median()
+    median = goes.mean()
 
     j =0 
-    print("\nS NOASS's scale for the median values ")
+    print("\nS NOASS's scale for the mean values ")
     for j in median:
 
         if ((j < 10^6) &( j >= 10^5)):
