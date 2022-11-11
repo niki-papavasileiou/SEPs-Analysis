@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate 
-from scipy.integrate import quad
+
 
 def sep():
 
