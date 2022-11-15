@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.interpolate as spi
 from scipy import interpolate 
 
 
@@ -29,7 +30,47 @@ def sep():
     print("\ndifferential proton flux spectrum (max):  ")
     print(slope_intercept[0])
 
+    f6i = goes['2011-06-03':'2011-06-07']
+    fpdo6i = f6i['FPDO_6']
+    f6ii = goes['2011-06-09':'2011-06-21']
+    fpdo6ii = f6ii['FPDO_6']
+    fpdo6i.rolling(3).mean()
+    fpdo6ii.rolling(3).mean()
 
+    f5i = goes['2011-06-03':'2011-06-07']
+    fpdo5i = f5i['FPDO_5']
+    f5ii = goes['2011-06-09':'2011-06-21']
+    fpdo5ii = f5ii['FPDO_5']
+    fpdo5i.rolling(3).mean()
+    fpdo5ii.rolling(3).mean()
+
+    f4i = goes['2011-06-03':'2011-06-05']
+    fpdo4i = f4i['FPDO_4']
+    f4ii = goes['2011-06-11':'2011-06-21']
+    fpdo4ii = f4ii['FPDO_4']
+    fpdo4i.rolling(3).mean()
+    fpdo4ii.rolling(3).mean()
+
+    f3i = goes['2011-06-03':'2011-06-04']
+    fpdo3i = f3i['FPDO_3']
+    f3ii = goes['2011-06-18':'2011-06-21']
+    fpdo3ii = f3ii['FPDO_3']
+    fpdo3i.rolling(3).mean()
+    fpdo3ii.rolling(3).mean()
+
+    f2i = goes['2011-06-03':'2011-06-04']
+    fpdo2i = f2i['FPDO_2']
+    f2ii = goes['2011-06-19':'2011-06-21']
+    fpdo2ii = f2ii['FPDO_2']
+    fpdo2i.rolling(3).mean()
+    fpdo2ii.rolling(3).mean()
+
+    f1i = goes['2011-06-03':'2011-06-04']
+    fpdo1i = f1i['FPDO_1']
+    f1ii = goes['2011-06-21':'2011-06-21']
+    fpdo1ii = f1ii['FPDO_1']
+    fpdo1i.rolling(3).mean()
+    fpdo1ii.rolling(3).mean()
 
     plt.figure(figsize=(8, 8))
     plt.plot(np.log(energy),goes.mean(),'o-')
@@ -46,32 +87,50 @@ def sep():
     print("\ndifferential proton flux spectrum (mean):  ")
     print(slope_intercept[0])
 
-    int1 = np.trapz(np.log(energy), goes.max())
+    int1 = np.trapz(np.log(energy),goes.max())
     print("\nFPDO max integral : ")
     print(int1)
 
-    int12 = interpolate.interp1d(np.log(energy),goes.max(), kind='cubic')
-    xnew1 = np.log(energy)
+    int12 = spi.interp1d(np.log(energy),goes.max(), kind='cubic')
+    energy_int1 = np.arange(10,80, 2)
+    xnew1 = np.log(energy_int1)
     ynew1 = int12(xnew1)
-    plt.plot(xnew1,ynew1)
-    plt.show()
+        
+    x0= xnew1[0]
+    xn = xnew1[-1]
+    n = 8
 
-    int122= np.trapz(xnew1,ynew1)
+    h = (xn-x0)/n 
+    inter1 = int12(x0)  + int12(xn)
+    for i in range(1,n):
+        k = x0+ i*h
+        inter1 = inter1 + 2* int12(k)
+    inter1 = inter1 *h/2 
     print("\nFPDO max integral (interpolation): ")
-    print(int122)
+    print(inter1)
 
-    int2 = np.trapz(np.log(energy), goes.mean())
+    int2 = np.trapz(np.log(energy),goes.mean())
     print("\nFPDO mean integral : ")
     print(int2)
 
     int22 = interpolate.interp1d(np.log(energy),goes.mean(), kind='cubic')
-    xnew = np.log(energy)
+    energy_int = np.arange(10,80, 2)
+    xnew = np.log(energy_int)
     ynew = int22(xnew)
-    plt.plot(xnew,ynew)
-    plt.show()
-    int222= np.trapz(xnew,ynew)
+        
+    x0= xnew[0]
+    xn = xnew[-1]
+    n = 8
+
+    h = (xn-x0)/n 
+    inter = int22(x0)  + int22(xn)
+    for i in range(1,n):
+        k = x0+ i*h
+        inter = inter + 2* int22(k)
+    inter = inter *h/2 
+
     print("\nFPDO mean integral (interpolation): ")
-    print(int222)
+    print(inter)
 
     print('\nDatetime of the max values:')
     l = goes.idxmax()
