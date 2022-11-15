@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import scipy.interpolate as spi
 from scipy import interpolate 
 
-
 def sep():
 
     plt.figure(figsize=(8, 8))
@@ -29,48 +28,6 @@ def sep():
     slope_intercept = np.polyfit(np.log(energy),goes.max(),1)
     print("\ndifferential proton flux spectrum (max):  ")
     print(slope_intercept[0])
-
-    f6i = goes['2011-06-03':'2011-06-07']
-    fpdo6i = f6i['FPDO_6']
-    f6ii = goes['2011-06-09':'2011-06-21']
-    fpdo6ii = f6ii['FPDO_6']
-    fpdo6i.rolling(3).mean()
-    fpdo6ii.rolling(3).mean()
-
-    f5i = goes['2011-06-03':'2011-06-07']
-    fpdo5i = f5i['FPDO_5']
-    f5ii = goes['2011-06-09':'2011-06-21']
-    fpdo5ii = f5ii['FPDO_5']
-    fpdo5i.rolling(3).mean()
-    fpdo5ii.rolling(3).mean()
-
-    f4i = goes['2011-06-03':'2011-06-05']
-    fpdo4i = f4i['FPDO_4']
-    f4ii = goes['2011-06-11':'2011-06-21']
-    fpdo4ii = f4ii['FPDO_4']
-    fpdo4i.rolling(3).mean()
-    fpdo4ii.rolling(3).mean()
-
-    f3i = goes['2011-06-03':'2011-06-04']
-    fpdo3i = f3i['FPDO_3']
-    f3ii = goes['2011-06-18':'2011-06-21']
-    fpdo3ii = f3ii['FPDO_3']
-    fpdo3i.rolling(3).mean()
-    fpdo3ii.rolling(3).mean()
-
-    f2i = goes['2011-06-03':'2011-06-04']
-    fpdo2i = f2i['FPDO_2']
-    f2ii = goes['2011-06-19':'2011-06-21']
-    fpdo2ii = f2ii['FPDO_2']
-    fpdo2i.rolling(3).mean()
-    fpdo2ii.rolling(3).mean()
-
-    f1i = goes['2011-06-03':'2011-06-04']
-    fpdo1i = f1i['FPDO_1']
-    f1ii = goes['2011-06-21':'2011-06-21']
-    fpdo1ii = f1ii['FPDO_1']
-    fpdo1i.rolling(3).mean()
-    fpdo1ii.rolling(3).mean()
 
     plt.figure(figsize=(8, 8))
     plt.plot(np.log(energy),goes.mean(),'o-')
