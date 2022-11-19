@@ -2,7 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.interpolate as spi
-from scipy import interpolate 
+import math 
+
 
 def sep():
 
@@ -41,54 +42,59 @@ def sep():
     plt.yscale('log')
     plt.show()
 
-    slope_intercept = np.polyfit(np.log(energy),goes_all_m[:,0],1)
+    slope_intercept1 = np.polyfit(np.log(energy),goes_all_m[:,0],1)
     print("\ndifferential proton flux spectrum (mean):  ")
-    print(slope_intercept[0])
+    print(slope_intercept1[0])
 
     int1 = np.trapz(np.log(energy),goes.max())
     print("\nFPDO max integral : ")
     print(int1)
 
-    int12 = spi.interp1d(np.log(energy),goes.max(), kind='cubic')
+
     energy_int1 = np.arange(10,80, 2)
-    xnew1 = np.log(energy_int1)
-    ynew1 = int12(xnew1)
-        
+    xnew1 = np.array(np.log(energy_int1))
+    int12 = np.array(math.exp(slope_intercept[1]) * (xnew1 ** slope_intercept[0]))      #power law 
+
     x0= xnew1[0]
     xn = xnew1[-1]
     n = 17
 
-    h = (xn-x0)/n 
-    inter1 = int12(x0)  + int12(xn)
+    h = (xn-x0)/n      
+    
+    inter1 = int12[0]  + int12[-1]
     for i in range(1,n):
         k = x0+ i*h
-        inter1 = inter1 + 2* int12(k)
+        k = int(k)
+        inter1 = inter1 + 2* int12[k]
     inter1 = inter1 *h/2 
-    print("\nFPDO max integral (interpolation): ")
+    print("\nFPDO max integral (power law): ")
     print(inter1)
+
 
     int2 = np.trapz(np.log(energy),goes_all_m[:,0])
     print("\nFPDO mean integral : ")
     print(int2)
 
-    int22 = interpolate.interp1d(np.log(energy),goes_all_m[:,0], kind='cubic')
+
     energy_int = np.arange(10,80, 2)
-    xnew = np.log(energy_int)
-    ynew = int22(xnew)
-        
+    xnew = np.array(np.log(energy_int))
+    int22 = np.array(math.exp(slope_intercept1[1]) * (xnew ** slope_intercept1[0]))      #power law 
+
     x0= xnew[0]
     xn = xnew[-1]
     n = 17
 
-    h = (xn-x0)/n 
-    inter = int22(x0)  + int22(xn)
+    h = (xn-x0)/n      
+    
+    inter = int22[0]  + int22[-1]
     for i in range(1,n):
         k = x0+ i*h
-        inter = inter + 2* int22(k)
+        k = int(k)
+        inter = inter + 2* int22[k]
     inter = inter *h/2 
-
-    print("\nFPDO mean integral (interpolation): ")
+    print("\nFPDO mean integral (power law): ")
     print(inter)
+
 
     print('\nDatetime of the max values:')
     l = goes.idxmax()
