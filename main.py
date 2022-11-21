@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import scipy.interpolate as spi
+from scipy import interpolate 
 import math 
 
 
@@ -11,7 +11,7 @@ def sep():
     goes.plot()
     plt.ylabel('FPDO')
     plt.yscale('log')
-    plt.show()
+    #plt.show()
 
     energy = [10, 20, 30, 50, 70, 80]
 
@@ -24,7 +24,7 @@ def sep():
     plt.xlabel('Energy')
     plt.title('SPE differential proton flux spectrum (max)')
     plt.yscale('log')
-    plt.show()
+   # plt.show()
 
     slope_intercept = np.polyfit(np.log(energy),goes.max(),1)
     print("\ndifferential proton flux spectrum (max):  ")
@@ -40,7 +40,7 @@ def sep():
     plt.xlabel('Energy')
     plt.title('SPE differential proton flux spectrum (mean)')
     plt.yscale('log')
-    plt.show()
+    #plt.show()
 
     slope_intercept1 = np.polyfit(np.log(energy),goes_all_m[:,0],1)
     print("\ndifferential proton flux spectrum (mean):  ")
@@ -50,10 +50,14 @@ def sep():
     print("\nFPDO max integral : ")
     print(int1)
 
+#########################################
+
+    z = (goes.max() ** 10)
+    z = np.array(math.exp(slope_intercept[1]) * (energy ** slope_intercept[0]))      #power law y = b*x^a
+    int12 = interpolate.interp1d(np.log(energy),z, kind='cubic')
 
     energy_int1 = np.arange(10,80, 2)
     xnew1 = np.array(np.log(energy_int1))
-    int12 = np.array(math.exp(slope_intercept[1]) * (xnew1 ** slope_intercept[0]))      #power law 
 
     x0= xnew1[0]
     xn = xnew1[-1]
@@ -61,24 +65,29 @@ def sep():
 
     h = (xn-x0)/n      
     
-    inter1 = int12[0]  + int12[-1]
+    inter1 = int12(x0)  + int12(xn)
     for i in range(1,n):
         k = x0+ i*h
-        k = int(k)
-        inter1 = inter1 + 2* int12[k]
+        #k = int(k)
+        inter1 = inter1 + 2* int12(k)
     inter1 = inter1 *h/2 
-    print("\nFPDO max integral (power law): ")
+    print("\nFPDO max integral (interpolation): ")
     print(inter1)
+    #print(np.log(inter1))
+#####################################
 
 
     int2 = np.trapz(np.log(energy),goes_all_m[:,0])
     print("\nFPDO mean integral : ")
     print(int2)
 
+########################################################
+    t = (goes_all_m[:,0] ** 10)
+    t = np.array(math.exp(slope_intercept1[1]) * (energy ** slope_intercept1[0]))      #power law y = b*x^a
+    int22 = interpolate.interp1d(np.log(energy),t, kind='cubic')
 
     energy_int = np.arange(10,80, 2)
     xnew = np.array(np.log(energy_int))
-    int22 = np.array(math.exp(slope_intercept1[1]) * (xnew ** slope_intercept1[0]))      #power law 
 
     x0= xnew[0]
     xn = xnew[-1]
@@ -86,15 +95,15 @@ def sep():
 
     h = (xn-x0)/n      
     
-    inter = int22[0]  + int22[-1]
+    inter = int22(x0)  + int22(xn)
     for i in range(1,n):
         k = x0+ i*h
-        k = int(k)
-        inter = inter + 2* int22[k]
+        
+        inter = inter + 2* int22(k)
     inter = inter *h/2 
-    print("\nFPDO mean integral (power law): ")
+    print("\nFPDO mean integral (interpolation): ")
     print(inter)
-
+###############################################################
 
     print('\nDatetime of the max values:')
     l = goes.idxmax()
