@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate 
-import math 
+import math
 
 
 def sep():
@@ -13,51 +13,47 @@ def sep():
     plt.yscale('log')
     #plt.show()
 
-    energy = [10, 20, 30, 50, 70, 80]
+    energy = [6.643, 12.61, 20.55, 46.62, 103.7, 154.6] 
 
     plt.figure(figsize=(8, 8))
-    plt.plot(np.log(energy),goes.max(),'o-')
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
     plt.grid()
     plt.ylabel('FPDO')
     plt.xlabel('Energy')
-    plt.title('SPE differential proton flux spectrum (max)')
-    plt.yscale('log')
-   # plt.show()
+    plt.title('SPE differential proton flux spectrum (max)')  
+    plt.loglog(energy,goes.max()**10)
+    #plt.show()
 
-    slope_intercept = np.polyfit(np.log(energy),goes.max(),1)
+    slope_intercept = np.polyfit(np.log10(energy),np.log10(goes.max()),1)
     print("\ndifferential proton flux spectrum (max):  ")
-    print(slope_intercept[0])
+    print(slope_intercept[0]**10)
 
     
     plt.figure(figsize=(8, 8))
-    plt.plot(np.log(energy),goes_all_m,'o-')
     plt.xticks(fontsize=16)
     plt.yticks(fontsize=16)
     plt.grid()
     plt.ylabel('FPDO')
     plt.xlabel('Energy')
     plt.title('SPE differential proton flux spectrum (mean)')
-    plt.yscale('log')
+    plt.loglog(energy,goes_all_m**10)
     #plt.show()
 
-    slope_intercept1 = np.polyfit(np.log(energy),goes_all_m[:,0],1)
+    slope_intercept1 = np.polyfit(np.log10(energy),np.log(goes_all_m[:,0]),1)
     print("\ndifferential proton flux spectrum (mean):  ")
-    print(slope_intercept1[0])
+    print(slope_intercept1[0]**10)
 
-    int1 = np.trapz(np.log(energy),goes.max())
+    int1 = np.trapz(np.log10(energy),np.log10(goes.max()))
     print("\nFPDO max integral : ")
-    print(int1)
-
-#########################################
+    print(int1**10)
 
     z = (goes.max() ** 10)
-    z = np.array(math.exp(slope_intercept[1]) * (energy ** slope_intercept[0]))      #power law y = b*x^a
-    int12 = interpolate.interp1d(np.log(energy),z, kind='cubic')
+    z = np.array(np.exp(slope_intercept[1]) * (energy ** slope_intercept[0]))      #power law y = b*x^a
+    int12 = interpolate.interp1d(np.log10(energy),np.log10(z), kind='cubic')
 
-    energy_int1 = np.arange(10,80, 2)
-    xnew1 = np.array(np.log(energy_int1))
+    energy_int1 = np.arange(6.643, 154.6, 2)
+    xnew1 = np.array(np.log10(energy_int1))
 
     x0= xnew1[0]
     xn = xnew1[-1]
@@ -68,26 +64,22 @@ def sep():
     inter1 = int12(x0)  + int12(xn)
     for i in range(1,n):
         k = x0+ i*h
-        #k = int(k)
+       
         inter1 = inter1 + 2* int12(k)
     inter1 = inter1 *h/2 
     print("\nFPDO max integral (interpolation): ")
-    print(inter1)
-    #print(np.log(inter1))
-#####################################
+    print(inter1**10)
 
-
-    int2 = np.trapz(np.log(energy),goes_all_m[:,0])
+    int2 = np.trapz(np.log10(energy),np.log10(goes_all_m[:,0]))
     print("\nFPDO mean integral : ")
-    print(int2)
+    print(int2**10)
 
-########################################################
     t = (goes_all_m[:,0] ** 10)
-    t = np.array(math.exp(slope_intercept1[1]) * (energy ** slope_intercept1[0]))      #power law y = b*x^a
-    int22 = interpolate.interp1d(np.log(energy),t, kind='cubic')
+    t = np.array(np.exp(slope_intercept1[1]) * (energy ** slope_intercept1[0]))      #power law y = b*x^a
+    int22 = interpolate.interp1d(np.log10(energy),np.log10(t), kind='cubic')
 
-    energy_int = np.arange(10,80, 2)
-    xnew = np.array(np.log(energy_int))
+    energy_int = np.arange(6.643, 154.6, 2)
+    xnew = np.array(np.log10(energy_int))
 
     x0= xnew[0]
     xn = xnew[-1]
@@ -102,8 +94,8 @@ def sep():
         inter = inter + 2* int22(k)
     inter = inter *h/2 
     print("\nFPDO mean integral (interpolation): ")
-    print(inter)
-###############################################################
+    print(inter**10)
+
 
     print('\nDatetime of the max values:')
     l = goes.idxmax()
@@ -127,27 +119,8 @@ def sep():
         elif (i <= 10):
             out.append ("S1")
         
-    print(out)
-
-    mean= goes_all_m[:,0]
-    arr = np.array(mean ** 10)
+    print(out)    
     
-    out2 =[]
-    print("\nS NOASS's scale for the mean values")
-    for i in arr:
-
-        if ( i >= 10^5):
-            out2.append ("S5")
-        elif (( i>= 10^4) &(i < 10^5) ):
-            out2.append ("S4")
-        elif (( i>= 10^3) & (i < 10^4) ):
-            out2.append ("S3")
-        elif ((i < 10^3) &( i>= 10^2)):
-            out2.append ("S2")
-        elif (i <= 10):
-            out2.append ("S1")
-        
-    print(out2)
     
 ask = input("Please choose a SEP\n1. 2011-06-03:2011-06-21\n2. 2006-12-06:2006-12-18\n")
 
