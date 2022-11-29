@@ -14,6 +14,13 @@ def sep():
     #plt.show()
 
     energy = [6.643, 12.61, 20.55, 46.62, 103.7, 154.6] 
+    ei =  interpolate.interp1d(energy,goes**10, kind='cubic')
+    ei10 = np.array(ei(np.arange(10.0,10.98, 0.01)))
+    ei30 = ei(np.arange(30.0,30.98, 0.01))    
+    ei80 = ei(np.arange(80.0,80.98, 0.01)) 
+    eix10 =np.array(np.arange(10.0,10.98, 0.01))
+    eix30 =np.arange(30.0,30.98, 0.01)
+    eix80 = np.arange(80.0,80.98, 0.01)
 
     plt.figure(figsize=(8, 8))
     plt.xticks(fontsize=16)
@@ -25,9 +32,13 @@ def sep():
     plt.loglog(energy,goes.max()**10)
     #plt.show()
 
-    slope_intercept = np.polyfit(np.log10(energy),np.log10(goes.max()),1)
+    slope_intercept = np.polyfit(np.log10(energy),np.log10(goes.max()**10),1)
     print("\ndifferential proton flux spectrum (max):  ")
     print(slope_intercept[0]**10)
+
+    #slope_intercept = np.polyfit(np.log10(eix10),np.log10(goes.max()**10),1)
+    #print("\ndifferential proton flux spectrum (max):  ")
+    #print(slope_intercept[0]**10)
 
     
     plt.figure(figsize=(8, 8))
@@ -40,11 +51,11 @@ def sep():
     plt.loglog(energy,goes_all_m**10)
     #plt.show()
 
-    slope_intercept1 = np.polyfit(np.log10(energy),np.log(goes_all_m[:,0]),1)
+    slope_intercept1 = np.polyfit(np.log10(energy),np.log(goes_all_m[:,0]**10),1)
     print("\ndifferential proton flux spectrum (mean):  ")
     print(slope_intercept1[0]**10)
 
-    int1 = np.trapz(np.log10(energy),np.log10(goes.max()))
+    int1 = np.trapz(np.log10(energy),np.log10(goes.max()**10))
     print("\nFPDO max integral : ")
     print(int1**10)
 
@@ -70,7 +81,7 @@ def sep():
     print("\nFPDO max integral (interpolation): ")
     print(inter1**10)
 
-    int2 = np.trapz(np.log10(energy),np.log10(goes_all_m[:,0]))
+    int2 = np.trapz(np.log10(energy),np.log10(goes_all_m[:,0]**10))
     print("\nFPDO mean integral : ")
     print(int2**10)
 
@@ -106,18 +117,18 @@ def sep():
     
     out =[]
     print("\nS NOASS's scale for the max values")
-    for i in ar:
+    
 
-        if ( i >= 10^5):
-            out.append ("S5")
-        elif (( i>= 10^4) &(i < 10^5) ):
-            out.append ("S4")
-        elif (( i>= 10^3) & (i < 10^4) ):
-            out.append ("S3")
-        elif ((i < 10^3) &( i>= 10^2)):
-            out.append ("S2")
-        elif (i <= 10):
-            out.append ("S1")
+    if ( ei10.max() >= 10^5):
+        out.append ("S5")
+    elif (( ei10.max()>= 10^4) &(ei10.max() < 10^5) ):
+        out.append ("S4")
+    elif (( ei10.max()>= 10^3) & (ei10.max() < 10^4) ):
+        out.append ("S3")
+    elif ((ei10.max() < 10^3) &( ei10.max()>= 10^2)):
+        out.append ("S2")
+    elif (ei10.max() <= 10):
+        out.append ("S1")
         
     print(out)    
     
