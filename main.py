@@ -21,7 +21,7 @@ def sep():
     plt.xlabel("energy(MeV)")
     plt.ylabel("FPDO")
     plt.title("1d Interpolation (max)")
-    #plt.show()
+    plt.show()
     print("differential proton flux spectrum (max):\n 10 MeV: ",eimax(10),"\n 30 MeV: ",eimax(30),"\n 80 Mev: ",eimax(80),"\n\n")
 
     eimean =  interpolate.interp1d(energy,goes_all_m[:,0]**10)
@@ -30,7 +30,7 @@ def sep():
     plt.xlabel("energy(MeV)")
     plt.ylabel("FPDO")
     plt.title("1d Interpolation (mean)")
-    #plt.show()
+    plt.show()
     print("differential proton flux spectrum (mean):\n 10 MeV: ",eimean(10),"\n 30 MeV: ",eimean(30),"\n 80 Mev: ",eimean(80),"\n\n")
 
     plt.figure(figsize=(8, 8))
@@ -41,9 +41,18 @@ def sep():
     plt.xlabel('Energy')
     plt.title('SPE differential proton flux spectrum (max)')  
     plt.loglog(energy,goes.max()**10)
-    #plt.show()
+    plt.show()
 
-    
+    plt.figure(figsize=(8, 8))
+    plt.xticks(fontsize=16)
+    plt.yticks(fontsize=16)
+    plt.grid()
+    plt.ylabel('FPDO')
+    plt.xlabel('Energy')
+    plt.title('SPE differential proton flux spectrum (mean)')
+    plt.loglog(energy,goes_all_m**10)
+    plt.show()
+  
     slope_intercept10max = np.polyfit(np.log10(exnew[0:9]),np.log10(eimax(exnew[0:9]) ),1)
     slope_intercept30max = np.polyfit(np.log10(exnew[200:209]),np.log10(eimax(exnew[200:209]) ),1)
     slope_intercept80max = np.polyfit(np.log10(exnew[690:699]),np.log10(eimax(exnew[690:699]) ),1)
@@ -171,26 +180,16 @@ def sep():
     inter80mean = inter80mean *h/2 
     print("\nFPDO mean integral (power law):\n 10 Mev:",inter10mean**10,"\n 30 Mev: ",inter30mean**10,"\n 80 Mev: ",inter80mean**10,"\n\n")
     
-    plt.figure(figsize=(8, 8))
-    plt.xticks(fontsize=16)
-    plt.yticks(fontsize=16)
-    plt.grid()
-    plt.ylabel('FPDO')
-    plt.xlabel('Energy')
-    plt.title('SPE differential proton flux spectrum (mean)')
-    plt.loglog(energy,goes_all_m**10)
-    #plt.show()
 
     int10max = np.trapz(np.log10(eimax(exnew[0:9])),np.log10(eimax(exnew[0:9]) ))
     int30max = np.trapz(np.log10(eimax(exnew[200:209])),np.log10(eimax(exnew[200:209]) ))
     int80max = np.trapz(np.log10(eimax(exnew[690:699])),np.log10(eimax(exnew[690:699]) ))
-    print("\nFPDO max integral :\n 10 Mev:",int10max**10,"\n 30 Mev:",int30max**10,"\n 80 MeV",int80max**10,"\n\n")
+    print("\nFPDO max integral (linear):\n 10 Mev:",int10max**10,"\n 30 Mev:",int30max**10,"\n 80 MeV",int80max**10,"\n\n")
 
     int10mean = np.trapz(np.log10(eimean(exnew[0:9])),np.log10(eimean(exnew[0:9]) ))
     int30mean = np.trapz(np.log10(eimean(exnew[200:209])),np.log10(eimean(exnew[200:209]) ))
     int80mean = np.trapz(np.log10(eimean(exnew[690:699])),np.log10(eimean(exnew[690:699]) ))
-    print("\nFPDO mean integral :\n 10 Mev:",int10mean**10,"\n 30 Mev:",int30mean**10,"\n 80 MeV",int80mean**10,"\n\n")
-
+    print("\nFPDO mean integral (linear):\n 10 Mev:",int10mean**10,"\n 30 Mev:",int30mean**10,"\n 80 MeV",int80mean**10,"\n\n")
 
     print('\nDatetime of the max values:')
     l = goes.idxmax()
@@ -200,8 +199,7 @@ def sep():
     ar = np.array(max ** 10)
     
     out =[]
-    print("\nS NOASS's scale for the max values")
-    
+    print("\nS NOASS's scale for the max values") 
 
     if ( eimax(10) >= 10^5):
         out.append ("S5")
