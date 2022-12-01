@@ -3,24 +3,37 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy import interpolate 
 import math
+from scipy import integrate
 
 
 def sep():
 
     plt.figure(figsize=(8, 8))
-    goes.plot()
+    #goes.plot()
     plt.ylabel('FPDO')
     plt.yscale('log')
     #plt.show()
 
     energy = [6.643, 12.61, 20.55, 46.62, 103.7, 154.6] 
-    ei =  interpolate.interp1d(energy,goes**10, kind='cubic')
-    ei10 = np.array(ei(np.arange(10.0,10.98, 0.01)))
-    ei30 = ei(np.arange(30.0,30.98, 0.01))    
-    ei80 = ei(np.arange(80.0,80.98, 0.01)) 
-    eix10 =np.array(np.arange(10.0,10.98, 0.01))
-    eix30 =np.arange(30.0,30.98, 0.01)
-    eix80 = np.arange(80.0,80.98, 0.01)
+
+    eimax =  interpolate.interp1d(energy,goes.max()**10)
+    exnew = np.array(np.arange(10,80,0.1))
+    e = eimax(exnew)
+    plt.plot(exnew, e)
+    plt.xlabel("energy(MeV)")
+    plt.ylabel("FPDO")
+    plt.title("1d Interpolation (max)")
+    #plt.show()
+    print("differential proton flux spectrum (max):\n 10 MeV: ",eimax(10),"\n 30 MeV: ",eimax(30),"\n 80 Mev: ",eimax(80),"\n\n")
+
+    eimean =  interpolate.interp1d(energy,goes_all_m[:,0]**10)
+    en = eimean(exnew)
+    plt.plot(exnew, en)
+    plt.xlabel("energy(MeV)")
+    plt.ylabel("FPDO")
+    plt.title("1d Interpolation (mean)")
+    #plt.show()
+    print("differential proton flux spectrum (mean):\n 10 MeV: ",eimean(10),"\n 30 MeV: ",eimean(30),"\n 80 Mev: ",eimean(80),"\n\n")
 
     plt.figure(figsize=(8, 8))
     plt.xticks(fontsize=16)
@@ -32,14 +45,9 @@ def sep():
     plt.loglog(energy,goes.max()**10)
     #plt.show()
 
+
     slope_intercept = np.polyfit(np.log10(energy),np.log10(goes.max()**10),1)
-    print("\ndifferential proton flux spectrum (max):  ")
-    print(slope_intercept[0]**10)
-
-    #slope_intercept = np.polyfit(np.log10(eix10),np.log10(goes.max()**10),1)
-    #print("\ndifferential proton flux spectrum (max):  ")
-    #print(slope_intercept[0]**10)
-
+    slope_intercept1 = np.polyfit(np.log10(energy),np.log(goes_all_m[:,0]**10),1)
     
     plt.figure(figsize=(8, 8))
     plt.xticks(fontsize=16)
@@ -51,17 +59,21 @@ def sep():
     plt.loglog(energy,goes_all_m**10)
     #plt.show()
 
-    slope_intercept1 = np.polyfit(np.log10(energy),np.log(goes_all_m[:,0]**10),1)
-    print("\ndifferential proton flux spectrum (mean):  ")
-    print(slope_intercept1[0]**10)
 
-    int1 = np.trapz(np.log10(energy),np.log10(goes.max()**10))
-    print("\nFPDO max integral : ")
-    print(int1**10)
+    int10max = np.trapz(np.log10(eimax(exnew[0:9])),np.log10(eimax(exnew[0:9]) ))
+    int30max = np.trapz(np.log10(eimax(exnew[200:209])),np.log10(eimax(exnew[200:209]) ))
+    int80max = np.trapz(np.log10(eimax(exnew[690:699])),np.log10(eimax(exnew[690:699]) ))
+    print("\nFPDO max integral :\n 10 Mev:",int10max**10,"\n 30 Mev:",int30max**10,"\n 80 MeV",int80max**10,"\n\n")
+
+    int10mean = np.trapz(np.log10(eimean(exnew[0:9])),np.log10(eimean(exnew[0:9]) ))
+    int30mean = np.trapz(np.log10(eimean(exnew[200:209])),np.log10(eimean(exnew[200:209]) ))
+    int80mean = np.trapz(np.log10(eimean(exnew[690:699])),np.log10(eimean(exnew[690:699]) ))
+    print("\nFPDO mean integral :\n 10 Mev:",int10mean**10,"\n 30 Mev:",int30mean**10,"\n 80 MeV",int80mean**10,"\n\n")
+
 
     z = (goes.max() ** 10)
     z = np.array(np.exp(slope_intercept[1]) * (energy ** slope_intercept[0]))      #power law y = b*x^a
-    int12 = interpolate.interp1d(np.log10(energy),np.log10(z), kind='cubic')
+    int12 = interpolate.interp1d(np.log10(energy),np.log10(z))
 
     energy_int1 = np.arange(6.643, 154.6, 2)
     xnew1 = np.array(np.log10(energy_int1))
@@ -81,13 +93,10 @@ def sep():
     print("\nFPDO max integral (interpolation): ")
     print(inter1**10)
 
-    int2 = np.trapz(np.log10(energy),np.log10(goes_all_m[:,0]**10))
-    print("\nFPDO mean integral : ")
-    print(int2**10)
 
     t = (goes_all_m[:,0] ** 10)
     t = np.array(np.exp(slope_intercept1[1]) * (energy ** slope_intercept1[0]))      #power law y = b*x^a
-    int22 = interpolate.interp1d(np.log10(energy),np.log10(t), kind='cubic')
+    int22 = interpolate.interp1d(np.log10(energy),np.log10(t))
 
     energy_int = np.arange(6.643, 154.6, 2)
     xnew = np.array(np.log10(energy_int))
@@ -119,15 +128,15 @@ def sep():
     print("\nS NOASS's scale for the max values")
     
 
-    if ( ei10.max() >= 10^5):
+    if ( eimax(10) >= 10^5):
         out.append ("S5")
-    elif (( ei10.max()>= 10^4) &(ei10.max() < 10^5) ):
+    elif (( eimax(10)>= 10^4) &(eimax(10) < 10^5) ):
         out.append ("S4")
-    elif (( ei10.max()>= 10^3) & (ei10.max() < 10^4) ):
+    elif (( eimax(10) >= 10^3) & (eimax(10) < 10^4) ):
         out.append ("S3")
-    elif ((ei10.max() < 10^3) &( ei10.max()>= 10^2)):
+    elif ((eimax(10) < 10^3) &( eimax(10) >= 10^2)):
         out.append ("S2")
-    elif (ei10.max() <= 10):
+    elif (eimax(10) <= 10):
         out.append ("S1")
         
     print(out)    
